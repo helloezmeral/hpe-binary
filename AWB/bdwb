@@ -1,0 +1,161 @@
+#!/bin/env bash
+################################################################################
+#                                                                              #
+#    HPECP Workbench.                                              #
+#                                                                              #
+################################################################################
+#set -x
+
+HPEWB="HPE Workbench"
+HPEWBUI="${HPEWB} WebUI"
+
+WORKSPACE=$(pwd)
+
+CONTAINERIMAGE="hpecp/workbench:5.1"
+DEFAULT_PORT=5002
+
+LAUNCH_UI='false'
+PORT=${DEFAULT_PORT}
+ADDITIONAL_ARGS=''
+CID_FILE='.cid'
+USER_ID=$(id -u)
+GROUP_ID=$(id -g)
+# If using podman:
+#DOCKER_RUN_CMD="docker run --rm \
+#    -v ${WORKSPACE}:/workspace -w /workspace --security-opt label=disable \
+#    -e USER_ID=${USER_ID} -e GROUP_ID=${GROUP_ID}"
+# Else host docker:
+DOCKER_GRP=$(getent group docker | cut -d: -f3)
+DOCKER_RUN_CMD="docker run --rm --security-opt label=disable \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ${WORKSPACE}:/workspace -w /workspace \
+    -v ${HOME}/.docker:/workspace/.docker \
+    -e DOCKER_CONFIG=/workspace/.docker \
+    -e USER_ID=${USER_ID} -e GROUP_ID=${GROUP_ID} -e DOCKER_GRP=${DOCKER_GRP}"
+
+usage() {
+    echo "${HPEWB}:"
+    echo ""
+    ${DOCKER_RUN_CMD} ${CONTAINERIMAGE} hpewb --help
+    echo "  UI Launcher Options:"
+    echo "       -l/--launchui : Launch the webui using the current directory as"
+    echo "                       workspace."
+    echo "           -p/--port : The host port to use for the UI. Default: ${DEFAULT_PORT}"
+    echo "         -s/--stopui : Stop the webui process."
+    echo ""
+}
+
+parse_options() {
+    while [ $# -gt 0 ];
+    do
+        case $1 in
+            -h|--help)
+                usage
+                exit 0
+                ;;
+            -l|--launchui)
+                LAUNCH_UI='true'
+                shift
+                ;;
+            -p|--port)
+                PORT=$2
+                shift 2
+                ;;
+            -s|--stopui)
+                STOP_UI='true'
+                shift
+                ;;
+            *)
+                ADDITIONAL_ARGS="${ADDITIONAL_ARGS} $1"
+                shift
+                ;;
+        esac
+    done
+}
+
+parse_options $@
+
+host_name() {
+    # Just in case the distro doesn't have 'hostname'
+    if [ $(command -v hostname >/dev/null; echo $?) -eq 0 ];
+    then
+        hostname -f
+    else
+        cat /etc/hostname
+    fi
+}
+
+host_port() {
+    cid=$1
+    docker inspect ${cid} --format \
+      '{{index (index (index .HostConfig.PortBindings "3000/tcp") 0) "HostPort"}}'
+}
+
+if [[ "${LAUNCH_UI}" == 'true' ]];
+then
+    if [[ "${STOP_UI}" == 'true' ]];
+    then
+        echo "ERROR: Please specify either one of --launchui or --stopui"
+        exit 1
+    fi
+    if [[ -e ${CID_FILE} ]];
+    then
+        cid=$(<${CID_FILE})
+        status=$(docker inspect ${cid} --format '{{.State.Status}}' 2>/dev/null)
+        case $status in
+            "")
+                rm -f ${CID_FILE}
+                ;;
+            "running")
+                echo "${HPEWBUI} is already running on port $(host_port ${cid})"
+                exit 0
+                ;;
+            "paused")
+                echo "${HPEWBUI} is currently paused: resuming on port $(host_port ${cid})"
+                docker unpause ${cid}
+                exit 0
+                ;;
+            "exited")
+                if [[ $(host_port ${cid}) -eq ${PORT} ]];
+                then
+                    echo "${HPEWBUI} was stopped: restarting on port ${PORT}"
+                    docker start ${cid}
+                    exit 0
+                else
+                    docker rm ${cid}
+                    rm -f ${CID_FILE}
+                fi
+                ;;
+            *)
+                echo "ERROR: Unknown container status for container ID: ${cid}"
+                echo "       Retry or run ${HPEWBUI} with --stopui."
+                exit 1
+                ;;
+        esac
+    fi
+    ${DOCKER_RUN_CMD} -d --cidfile ${CID_FILE} --publish ${PORT}:3000 ${CONTAINERIMAGE}
+    ret=$?
+    if [[ $ret -eq 0 ]];
+    then
+        if [[ ${PORT} == *:* ]]; then ADDR=${PORT}; else ADDR=$(host_name):${PORT}; fi
+        echo "${HPEWBUI} is running: open your browser to http://${ADDR}/"
+    fi
+    exit $ret
+elif [[ "${STOP_UI}" == 'true' ]];
+then
+    if [[ -e ${CID_FILE} ]];
+    then
+        cid=$(<${CID_FILE})
+        rm -f ${CID_FILE}
+        docker stop ${cid}
+        ret=$?
+        echo "${HPEWBUI} stopped."
+        exit $ret
+    else
+        echo "${HPEWBUI} is not running for the current workspace."
+        exit 0
+    fi
+else
+    ${DOCKER_RUN_CMD} -it ${CONTAINERIMAGE} hpewb ${ADDITIONAL_ARGS}
+    exit $?
+fi
