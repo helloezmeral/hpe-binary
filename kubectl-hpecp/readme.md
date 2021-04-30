@@ -42,6 +42,7 @@ KUBECONFIG="/home/hpeadmin/.kube/.hpecp/ez53-gateway.hpeilab.com/config:/home/hp
 
 # Alternative using kubeconfig file
 - This is a temperary method, the key will expire
+- download the file, view it inside the browser and copy to the bash
 ```
 hpeadmin@awb51:~/myAWB/app01/deliverables$ nano kubeconfig
 hpeadmin@awb51:~/myAWB/app01/deliverables$ export KUBECONFIG=./kubeconfig 
