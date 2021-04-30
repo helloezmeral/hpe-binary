@@ -1,6 +1,6 @@
 # HPECPAPI notes
 
-```
+```bash
 curl -k -i -s --request POST "http://ez53-gateway.hpeilab.com:8080/api/v2/session" \
 --header 'Accept: application/json' \
 --header 'Content-Type: application/json' \
