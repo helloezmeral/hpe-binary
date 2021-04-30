@@ -1,5 +1,16 @@
 # HPECPAPI notes
 
+```
+curl -k -i -s --request POST "http://ez53-gateway.hpeilab.com:8080/api/v2/session" \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"name": "username",
+"password": "password",
+"tenant_name": "test-tenant"
+}'
+```
+
 ## code
 ```bash
 curl -k -s --request GET "http://ez53-gateway.hpeilab.com:8080/api/v2/k8skubeconfig" \
