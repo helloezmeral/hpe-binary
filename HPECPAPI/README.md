@@ -9,7 +9,22 @@ curl -k -i -s --request POST "http://ez53-gateway.hpeilab.com:8080/api/v2/sessio
 "password": "password",
 "tenant_name": "test-tenant"
 }'
+
+#
+HTTP/1.1 201 Created
+Access-Control-Allow-Origin: *
+Content-Length: 13
+Content-Type: text/plain
+Date: Fri, 30 Apr 2021 13:18:38 GMT
+Location: /api/v2/session/thisisthesessionid
+Server: HPE Ezmeral Container Platform 5.3
+
+201 Created
 ```
+```bash
+
+```
+
 
 ## code
 ```bash
