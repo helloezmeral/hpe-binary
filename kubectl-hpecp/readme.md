@@ -1,3 +1,4 @@
+# install
 ```bash
 wget https://bluedata-releases.s3.amazonaws.com/kubectl-epic/3.4/14/linux/kubectl-hpecp.star
 tar xf kubectl-hpecp.star
