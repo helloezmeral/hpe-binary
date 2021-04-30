@@ -22,7 +22,12 @@ Server: HPE Ezmeral Container Platform 5.3
 201 Created
 ```
 ```bash
+curl -k -s --request GET "http://ez53-gateway.hpeilab.com:8080/api/v2/k8skubeconfig" \
+--header "X-BDS-SESSION: /api/v2/session/dac075f6-5bcf-4f3d-9a22-5dd0bf67a804" \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' > ./kubeconfig
 
+export KUBECONFIG=kubeconfig
 ```
 
 
