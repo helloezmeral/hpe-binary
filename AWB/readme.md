@@ -19,3 +19,8 @@ docker load -i hpecp-workbench-img-5.1.tgz
 sudo chmod +x bdwb
 sudo cp bdwb /usr/local/bin/
 ```
+
+# Launch WebUI
+```
+bdwb --launchui --port 8000
+bdwb --stopui
