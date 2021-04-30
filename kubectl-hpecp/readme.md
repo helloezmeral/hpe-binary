@@ -40,8 +40,13 @@ export KUBECONFIG="/home/hpeadmin/.kube/.hpecp/ez53-gateway.hpeilab.com/config"
 KUBECONFIG="/home/hpeadmin/.kube/.hpecp/ez53-gateway.hpeilab.com/config:/home/hpeadmin/.kube/config" kubectl config view
 ```
 
-# Alternative
+# Alternative using kubeconfig file
+- This is a temperary method, the key will expire
 ```
+hpeadmin@awb51:~/myAWB/app01/deliverables$ nano kubeconfig
+hpeadmin@awb51:~/myAWB/app01/deliverables$ export KUBECONFIG=./kubeconfig 
+hpeadmin@awb51:~/myAWB/app01/deliverables$ kubectl get pods
+
 save the kubeconfig file
 export=KUBECONFIG="kubeconfig"
 kubectl get pods
