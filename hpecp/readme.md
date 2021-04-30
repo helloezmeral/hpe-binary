@@ -38,3 +38,18 @@ kubectl hpecp refresh ez53-gateway.hpeilab.com --insecure
 export KUBECONFIG="/home/hpeadmin/.kube/.hpecp/ez53-gateway.hpeilab.com/config"
 KUBECONFIG="/home/hpeadmin/.kube/.hpecp/ez53-gateway.hpeilab.com/config:/home/hpeadmin/.kube/config" kubectl config view
 ```
+
+# Alternative
+```
+save the kubeconfig file
+export=KUBECONFIG="kubeconfig"
+kubectl get pods
+```
+
+# Kubedirector
+```
+# these are running application
+kubectl get KubeDirectorCluster
+kubectl delete  KubeDirectorCluster codeserver
+
+```
