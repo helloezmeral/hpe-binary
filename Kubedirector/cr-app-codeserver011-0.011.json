@@ -1,0 +1,76 @@
+{
+  "apiVersion": "kubedirector.hpe.com/v1beta1",
+  "kind": "KubeDirectorApp",
+  "metadata": {
+    "name": "codeserver011"
+  },
+  "spec": {
+    "label": {
+      "name": "code-server",
+      "description": "code-server"
+    },
+    "distroID": "codeserver011",
+    "version": "0.011",
+    "configSchemaVersion": 8,
+    "config": {
+      "roleServices": [
+        {
+          "roleID": "code-server",
+          "serviceIDs": [
+            "webui"
+          ]
+        }
+      ],
+      "selectedRoles": [
+        "code-server"
+      ]
+    },
+    "services": [
+      {
+        "id": "webui",
+        "label": {
+          "name": "webui"
+        },
+        "endpoint": {
+          "port": 8080,
+          "isDashboard": true,
+          "hasAuthToken": false,
+          "urlScheme": "http",
+          "path": "/"
+        }
+      },
+      {
+        "id": "ssh",
+        "label": {
+          "name": "ssh"
+        },
+        "endpoint": {
+          "port": 22,
+          "isDashboard": false,
+          "hasAuthToken": false
+        }
+      }
+    ],
+    "roles": [
+      {
+        "id": "code-server",
+        "cardinality": "1+",
+        "minResources": {
+          "memory": "4Mi",
+          "cpu": "3"
+        },
+        "imageRepoTag": "helloezmeral/code-server"
+      }
+    ],
+    "capabilities": [
+      "CHOWN",
+      "FOWNER",
+      "NET_ADMIN",
+      "SETGID",
+      "SETUID",
+      "SYS_ADMIN"
+    ],
+    "systemdRequired": true,
+    "logoURL": "https://github.com/cdr/deploy-code-server/raw/main/img/logo/coder.png"
+  }
+}
