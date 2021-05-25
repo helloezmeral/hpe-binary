@@ -4,3 +4,5 @@
 wget https://raw.githubusercontent.com/helloezmeral/hpe-binary/main/hadoop-dtap-config/hadoop-env.sh -O ./hadoop/etc/hadoop/hadoop-env.sh 
 wget https://raw.githubusercontent.com/helloezmeral/hpe-binary/main/hadoop-dtap-config/core-site.xml -O ./hadoop/etc/hadoop/core-site.xml 
 ```
+
+![](https://raw.githubusercontent.com/helloezmeral/blog/main/Accessing-dtap-in-pods/readme.md)
