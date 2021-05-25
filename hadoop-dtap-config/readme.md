@@ -5,4 +5,4 @@ wget https://raw.githubusercontent.com/helloezmeral/hpe-binary/main/hadoop-dtap-
 wget https://raw.githubusercontent.com/helloezmeral/hpe-binary/main/hadoop-dtap-config/core-site.xml -O ./hadoop/etc/hadoop/core-site.xml 
 ```
 
-![](https://raw.githubusercontent.com/helloezmeral/blog/main/Accessing-dtap-in-pods/readme.md)
+[blog](https://raw.githubusercontent.com/helloezmeral/blog/main/Accessing-dtap-in-pods/readme.md)
