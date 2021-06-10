@@ -1,7 +1,7 @@
 # Hadoop DataTap Config files Example
 
 You can directly run the following commands to replace your current config files to the example one: \
-__**CAUTION**__: This will **replace** existing file
+__**CAUTION**__: This will **replace** existing files
 ```
 wget https://raw.githubusercontent.com/helloezmeral/hpe-binary/main/hadoop-dtap-config/hadoop-env.sh -O ./hadoop/etc/hadoop/hadoop-env.sh 
 wget https://raw.githubusercontent.com/helloezmeral/hpe-binary/main/hadoop-dtap-config/core-site.xml -O ./hadoop/etc/hadoop/core-site.xml 
